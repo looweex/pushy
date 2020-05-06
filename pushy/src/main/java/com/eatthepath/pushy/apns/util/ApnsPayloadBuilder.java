@@ -33,6 +33,8 @@ import java.util.*;
  * @author <a href="https://github.com/jchambers">Jon Chambers</a>
  *
  * @see <a href="https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification">Generating a Remote Notification</a>
+ *
+ * @since 0.14.0
  */
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public abstract class ApnsPayloadBuilder {

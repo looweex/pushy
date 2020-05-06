@@ -22,24 +22,51 @@
 
 package com.eatthepath.pushy.apns.util;
 
-import com.eatthepath.json.JsonSerializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Objects;
 
 /**
- * A simple APNs payload builder that serializes payloads using a {@link JsonSerializer}.
+ * An APNs payload builder that serializes payloads with a {@link Gson} instance. Callers may provide their own
+ * {@code Gson} instance to change how the payload builder serializes custom properties.
  *
  * @author <a href="https://github.com/jchambers">Jon Chambers</a>
  *
  * @since 0.14.0
  */
-public class SimpleApnsPayloadBuilder extends ApnsPayloadBuilder {
+public class GsonApnsPayloadBuilder extends ApnsPayloadBuilder {
+
+    private final Gson gson;
+
+    private static final Gson DEFAULT_GSON = new GsonBuilder()
+            .disableHtmlEscaping()
+            .serializeNulls()
+            .create();
+
+    /**
+     * Constructs a new payload builder with a default {@link Gson} instance.
+     */
+    public GsonApnsPayloadBuilder() {
+        this(DEFAULT_GSON);
+    }
+
+    /**
+     * Constructs a new payload builder with the given {@code Gson} instance.
+     *
+     * @param gson the {@code Gson} instance with which to serialize APNs payloads
+     */
+    public GsonApnsPayloadBuilder(final Gson gson) {
+        this.gson = Objects.requireNonNull(gson);
+    }
 
     @Override
     public String build() {
-        return JsonSerializer.writeJsonTextAsString(this.buildPayloadMap());
+        return this.gson.toJson(this.buildPayloadMap());
     }
 
     @Override
     public String buildMdmPayload(final String pushMagicValue) {
-        return JsonSerializer.writeJsonTextAsString(this.buildMdmPayloadMap(pushMagicValue));
+        return this.gson.toJson(this.buildMdmPayloadMap(pushMagicValue));
     }
 }
